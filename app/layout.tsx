@@ -1,29 +1,19 @@
 import type { Metadata } from "next"
+import { RELIGION } from "@/config/religion"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { Analytics } from "@vercel/analytics/react"
 
+// Dynamic metadata from config
 export const metadata: Metadata = {
-  title: "Islam for Life Stages",
-  description:
-    "Daily Quranic guidance personalized for your season of life. Stories, poetry, context, and reflections that speak to where you are right now.",
+  title: RELIGION.name,
+  description: `${RELIGION.tagline}. ${RELIGION.description}`,
   keywords: [
-    "Quran",
-    "Islamic guidance",
-    "Muslim app",
-    "daily ayah",
-    "Quran reflection",
-    "Islamic stories",
-    "Muslim life stages",
-    "prayer times",
-    "Qibla",
+    RELIGION.terms.scripture,
+    RELIGION.terms.holyBook,
+    RELIGION.shortName,
+    "life stages",
+    "daily guidance",
+    "spiritual growth",
   ],
-  authors: [{ name: "Islam for Life Stages" }],
-  openGraph: {
-    title: "Islam for Life Stages",
-    description: "Daily Quranic guidance personalized for your season of life.",
-    type: "website",
-  },
 }
 
 export default function RootLayout({
@@ -31,21 +21,40 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const theme = RELIGION.theme
+  const features = RELIGION.features
+  
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap"
-          rel="stylesheet"
-        />
+        {/* Load original language font if needed */}
+        {features.originalLanguage && features.originalLanguageFont && (
+          <>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+            <link
+              href={`https://fonts.googleapis.com/css2?family=${features.originalLanguageFont}:wght@400;700&display=swap`}
+              rel="stylesheet"
+            />
+          </>
+        )}
+        
+        {/* Set CSS variables from theme */}
+        <style>{`
+          :root {
+            --color-primary: ${theme.colors.primary};
+            --color-primary-dark: ${theme.colors.primaryDark};
+            --color-secondary: ${theme.colors.secondary};
+            --color-accent: ${theme.colors.accent};
+            --color-background: ${theme.colors.background};
+            --font-original: "${features.originalLanguageFont || 'serif'}";
+          }
+        `}</style>
       </head>
-      <body className="min-h-screen bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 text-white antialiased">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          {children}
-        </ThemeProvider>
-        <Analytics />
+      <body 
+        className={`min-h-screen bg-gradient-to-br ${theme.background.gradient} text-white antialiased`}
+      >
+        {children}
       </body>
     </html>
   )

@@ -1,192 +1,221 @@
-// Life Stage Types
-export type LifeStageId =
-  | "youth"
-  | "teens"
-  | "university"
-  | "new-muslim"
-  | "newly-married"
-  | "new-parents"
-  | "ramadan"
-  | "hajj-prep"
-  | "empty-nesting"
-  | "divorced"
-  | "senior"
-  | "seeking"
+/**
+ * GENERIC TYPES
+ * 
+ * These types work for ANY religion.
+ * They use generic terms that get mapped to religion-specific terms via config.
+ */
+
+// ============================================
+// SCRIPTURE TYPES
+// ============================================
+
+/**
+ * A single verse/ayah/shloka from any scripture
+ */
+export interface Scripture {
+  id: string
+  reference: string           // "2:255" or "John 3:16" or "BG 2.47"
+  
+  // The actual text
+  originalText?: string       // Arabic, Hebrew, Sanskrit, etc.
+  translation: string
+  translationSource: string   // "Sahih International", "NIV", etc.
+  
+  // Chapter/Book info
+  chapter: {
+    number: number
+    name: string              // "Al-Baqarah", "Genesis", "Bhagavad Gita"
+    originalName?: string     // Original language name
+  }
+  
+  // Verse position
+  verseNumber: number
+  
+  // Metadata
+  metadata?: {
+    juz?: number              // Islam: Quran division
+    hizb?: number             // Islam: Quran subdivision
+    testament?: string        // Christianity: Old/New
+    book?: string             // Various: Book name
+    page?: number
+  }
+}
+
+/**
+ * Daily scripture with chapter context
+ */
+export interface DailyScripture {
+  date: string                // YYYY-MM-DD
+  scripture: Scripture
+  chapterInfo?: {
+    totalVerses: number
+    theme?: string
+    period?: string           // Makki/Madani, Pre-exile, etc.
+  }
+}
+
+// ============================================
+// LIFE STAGE TYPES
+// ============================================
 
 export interface LifeStage {
-  id: LifeStageId
+  id: string
   label: string
   description: string
   themes: string[]
   tone: string
+  readingLevel?: string
 }
 
-// Quran Types
-export interface Surah {
-  id: number // 1-114
-  name: string // English name
-  name_arabic: string // Arabic name
-  name_translation: string // Meaning of name
-  revelation_place: "makkah" | "madinah"
-  verses_count: number
-}
+// ============================================
+// GENERATED CONTENT TYPES
+// ============================================
 
-export interface Ayah {
-  id: number
-  verse_number: number
-  verse_key: string // e.g., "2:255"
-  surah_id: number
-  text_arabic: string
-  text_translation: string // English translation
-  translation_name: string // e.g., "Sahih International"
-  juz_number: number
-  hizb_number: number
-  page_number: number
-}
-
-export interface DailyAyah {
-  date: string // YYYY-MM-DD format
-  ayah: Ayah
-  surah: Surah
-}
-
-// Hadith Types
-export interface Hadith {
-  id: string
-  collection: string // e.g., "Sahih Bukhari", "Sahih Muslim"
-  book: string
-  number: string
-  text_arabic?: string
-  text_english: string
-  narrator: string
-  grade: "sahih" | "hasan" | "daif" | "unknown"
-}
-
-// Prayer Times Types
-export interface PrayerTimes {
-  date: string
-  fajr: string
-  sunrise: string
-  dhuhr: string
-  asr: string
-  maghrib: string
-  isha: string
-  timezone: string
-}
-
-export interface PrayerSettings {
-  method: number // Calculation method (1-15)
-  school: 0 | 1 // 0 = Shafi, 1 = Hanafi
-  latitude: number
-  longitude: number
-  timezone: string
-}
-
-// Qibla Types
-export interface QiblaData {
-  latitude: number
-  longitude: number
-  direction: number // Degrees from North
-  distance: number // Distance to Kaaba in km
-}
-
-// Content Generation Types (matching BLS structure)
 export interface Story {
+  id: string
   title: string
-  content: string // 750 tokens minimum
-  hadith_reference?: string // Optional hadith connection
-  image_prompt: string
-  card_image_prompt?: string
-  image_urls?: string[]
-  card_image_url?: string
+  content: string             // 750+ words
+  relatedTeaching?: string    // Hadith, Midrash, etc.
+  imagePrompt?: string
+  imageUrl?: string
 }
 
 export interface Poem {
+  id: string
   title: string
   content: string
-  style?: "free-verse" | "nasheed-inspired" | "classical"
-  image_prompt: string
-  card_image_prompt?: string
-  image_url?: string
-  card_image_url?: string
+  style?: string              // "free-verse", "nasheed", "hymn"
+  imagePrompt?: string
+  imageUrl?: string
 }
 
 export interface DeepContext {
-  speaker: string // Who revealed/transmitted
-  audience: string // Original recipients
-  why_revealed: string // Asbab al-Nuzul
-  importance: string // Theological significance
-  related_hadith: string // Supporting hadith
-  before_ayah: string // Context before
-  after_ayah: string // Context after
-  revelation_type: "makki" | "madani"
-  location?: string
-}
-
-export interface LifeStageInsights {
-  [key: string]: string
-}
-
-export interface CardImages {
-  overview?: string
-  context?: string
-  prayer?: string
+  source: string              // Who wrote/revealed this
+  audience: string            // Original recipients
+  historicalContext: string   // What was happening
+  significance: string        // Why it matters theologically
+  relatedTeachings: string    // Connected texts (hadith, commentary)
+  beforeVerse: string         // Context from before
+  afterVerse: string          // Context from after
 }
 
 export interface GeneratedContent {
-  conversational_intro: string // Friendly breakdown
-  stories: Story[] // 2 stories
-  poems: Poem[] // 2 poems
-  deep_context: DeepContext
-  related_hadith: Hadith[] // Supporting ahadith
-  life_stage_insights: LifeStageInsights
-  reflection_questions: string[]
-  dua_suggestion: string // Prayer/supplication
-  card_images?: CardImages
+  // Core content
+  friendlyBreakdown: string   // Conversational exploration (500+ words)
+  stories: Story[]            // 2 modern stories
+  poems: Poem[]               // 2 poems
+  
+  // Context
+  context: DeepContext
+  
+  // Reflection
+  reflectionQuestions: string[]  // 3 questions
+  prayerSuggestion: string       // Dua/Prayer/Meditation
+  
+  // For specific life stage
+  lifeStageId: string
+  lifeStageInsight: string
+  
+  // Metadata
+  generatedAt: string
+  scriptureReference: string
 }
 
-export interface AIInsights {
-  conversational_intro: string
-  historical_context: string
-  modern_application: string
-  life_stage_insight: string
-  reflection_questions: string[]
-  dua_suggestion: string
-}
+// ============================================
+// USER TYPES
+// ============================================
 
-export interface GenerationProgress {
-  step: string
-  progress: number // 0-100
-  message: string
-}
-
-// User Types
 export interface UserProfile {
   id: string
   email: string
-  life_stage: LifeStageId
-  prayer_settings?: PrayerSettings
+  lifeStageId: string
+  
+  // Preferences
   language: string
-  created_at: string
-  subscription_status: "free" | "trial" | "premium"
+  showOriginalText: boolean
+  
+  // Location (for prayer times, etc.)
+  location?: {
+    latitude: number
+    longitude: number
+    timezone: string
+  }
+  
+  // Subscription
+  subscription: {
+    status: "free" | "trial" | "premium" | "expired"
+    expiresAt?: string
+  }
+  
+  createdAt: string
 }
 
-// Calculation Method Reference
-export const CALCULATION_METHODS = {
-  1: "University of Islamic Sciences, Karachi",
-  2: "Islamic Society of North America (ISNA)",
-  3: "Muslim World League",
-  4: "Umm Al-Qura University, Makkah",
-  5: "Egyptian General Authority of Survey",
-  7: "Institute of Geophysics, University of Tehran",
-  8: "Gulf Region",
-  9: "Kuwait",
-  10: "Qatar",
-  11: "Majlis Ugama Islam Singapura",
-  12: "Union Organization Islamic de France",
-  13: "Diyanet İşleri Başkanlığı, Turkey",
-  14: "Spiritual Administration of Muslims of Russia",
-  15: "Moonsighting Committee Worldwide",
-} as const
+// ============================================
+// PRAYER TIMES (Optional Feature)
+// ============================================
 
-export type CalculationMethod = keyof typeof CALCULATION_METHODS
+export interface PrayerTimes {
+  date: string
+  location: {
+    latitude: number
+    longitude: number
+    timezone: string
+    name?: string
+  }
+  times: {
+    name: string              // "Fajr", "Shacharit", etc.
+    time: string              // "05:30"
+    isMainPrayer: boolean     // Distinguish prayer vs sunrise
+  }[]
+  calculationMethod?: string
+}
+
+// ============================================
+// DIRECTION FINDER (Qibla, Jerusalem, etc.)
+// ============================================
+
+export interface DirectionData {
+  targetName: string          // "Kaaba", "Jerusalem", etc.
+  targetCoordinates: {
+    latitude: number
+    longitude: number
+  }
+  fromCoordinates: {
+    latitude: number
+    longitude: number
+  }
+  bearing: number             // Degrees from North
+  distance: number            // Kilometers
+}
+
+// ============================================
+// API RESPONSE TYPES
+// ============================================
+
+export interface ApiResponse<T> {
+  success: boolean
+  data?: T
+  error?: string
+}
+
+// ============================================
+// GENERATION PROGRESS
+// ============================================
+
+export interface GenerationProgress {
+  step: string
+  progress: number            // 0-100
+  message: string
+}
+
+// ============================================
+// CACHE TYPES
+// ============================================
+
+export interface CacheEntry {
+  key: string
+  content: GeneratedContent
+  lifeStageId: string
+  createdAt: string
+  expiresAt: string
+}

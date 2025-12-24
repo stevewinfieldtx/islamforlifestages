@@ -1,17 +1,25 @@
 @import "tailwindcss";
 
-/* Islamic Color Scheme */
+/* 
+ * CSS VARIABLES
+ * These are set based on the religion config theme.
+ * The actual values come from config/religion.ts
+ */
+
 :root {
-  --emerald-500: #10b981;
-  --emerald-600: #059669;
-  --teal-500: #14b8a6;
-  --gold-500: #f59e0b;
+  /* These will be overridden by the theme in config */
+  --color-primary: #10b981;
+  --color-primary-dark: #059669;
+  --color-secondary: #14b8a6;
+  --color-accent: #f59e0b;
+  --color-background: #022c22;
 }
 
+/* Base styles */
 * {
   box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
 html, body {
@@ -20,74 +28,175 @@ html, body {
 }
 
 body {
-  background: linear-gradient(135deg, #022c22 0%, #0f172a 50%, #020617 100%);
-  color: white;
   min-height: 100vh;
+  color: white;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
-.islamic-gradient-bg {
-  background: linear-gradient(135deg, #022c22 0%, #0f172a 50%, #020617 100%);
-  position: relative;
-}
-
-.islamic-gradient-bg::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at top, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(20, 184, 166, 0.08) 0%, transparent 50%);
-  pointer-events: none;
-}
-
+/* Glass card effect */
 .glass-card {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .glass-card:hover {
   background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(16, 185, 129, 0.2);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
+/* Animations */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-fade-in {
   animation: fade-in 0.5s ease-out forwards;
 }
 
-.font-amiri {
-  font-family: "Amiri", serif;
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
 }
 
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(16, 185, 129, 0.3);
   border-radius: 4px;
 }
 
-::selection {
-  background: rgba(16, 185, 129, 0.3);
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  opacity: 0.3;
+  border-radius: 4px;
 }
 
+::-webkit-scrollbar-thumb:hover {
+  opacity: 0.5;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-primary);
+  opacity: 0.3;
+}
+
+/* Focus */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Button base */
 button {
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
+button:active {
+  transform: scale(0.98);
+}
+
+/* Link base */
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* RTL support for original language text */
+[dir="rtl"] {
+  text-align: right;
+}
+
+/* Original language text styling */
+.scripture-original {
+  font-family: var(--font-original, "Amiri", serif);
+  line-height: 2;
+}
+
+/* Loading spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Content sections */
+.content-section {
+  position: relative;
+}
+
+.content-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-primary),
+    transparent
+  );
+  opacity: 0.3;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .scripture-original {
+    font-size: 1.25rem;
+  }
 }

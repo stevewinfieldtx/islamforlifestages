@@ -1,170 +1,176 @@
-# Islam for Life Stages
+# Faith for Life Stages
 
-Daily Quranic guidance personalized for your season of life. Stories, poetry, context, and reflections that speak to where you are right now.
+A **multi-religion template** for building personalized daily scripture apps. One codebase, swap a single config file to deploy for any religion.
 
-## 🌙 Overview
+## 🎯 Current: Islam for Life Stages
 
-Islam for Life Stages transforms daily Quranic verses into personalized spiritual experiences. Using AI, we generate:
+This instance is configured for Islam. To create versions for other religions, simply copy and modify `config/religion.ts`.
 
-- **Friendly Breakdown**: Conversational exploration of each ayah
-- **Modern Stories**: Relatable narratives that bring the Quran to life
-- **Poetry**: Inspiring verses in nasheed-inspired styles
-- **Deep Context**: Scholarly background (asbab al-nuzul, hadith connections)
-- **Prayer Times**: Location-based salah times with notifications
-- **Qibla Compass**: Find the direction of the Kaaba
-
-## 🕌 Life Stages
-
-We personalize content for 12 distinct life stages:
-
-| Stage | Description |
-|-------|-------------|
-| Youth (6-12) | Children learning foundational Islamic concepts |
-| Teens (13-17) | Young Muslims navigating identity and faith |
-| University (18-24) | College students maintaining faith in secular environments |
-| New to Islam | Recent converts learning the basics |
-| Newly Married | Couples building their halal home |
-| New Parents | Raising righteous children |
-| Ramadan Focus | Maximizing the blessed month |
-| Hajj/Umrah Prep | Preparing for the journey of a lifetime |
-| Empty Nesting | Rediscovering purpose after children leave |
-| Divorced | Finding healing through faith |
-| Senior (65+) | Preparing for the meeting with Allah |
-| Seeking/Questioning | Those exploring Islam |
-
-## 🔧 Tech Stack
-
-- **Framework**: Next.js 16 + React 19
-- **Styling**: Tailwind CSS 4 + shadcn/ui
-- **AI**: OpenRouter (Claude/GPT) for content generation
-- **Images**: Runware for AI-generated imagery
-- **Database**: Supabase (auth, caching, profiles)
-- **Payments**: Stripe
-- **APIs**:
-  - Quran.com API (verses, translations)
-  - Aladhan API (prayer times, Qibla)
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- pnpm (recommended) or npm
-- Supabase account
-- OpenRouter API key
-- Stripe account (for payments)
-
-### Environment Variables
-
-Create a `.env.local` file:
-
-```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-
-# OpenRouter (AI)
-OPENROUTER_API_KEY=your_openrouter_key
-OPENROUTER_WRITER_MODEL=anthropic/claude-3-opus
-OPENROUTER_RESEARCH_MODEL=openai/gpt-4-turbo-preview
-
-# Runware (Images)
-RUNWARE_API_KEY=your_runware_key
-
-# Stripe
-STRIPE_SECRET_KEY=your_stripe_secret
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable
-```
-
-### Installation
+## 🚀 Quick Start
 
 ```bash
-# Clone the repo
-git clone https://github.com/yourusername/islam-for-life-stages.git
-cd islam-for-life-stages
-
 # Install dependencies
-pnpm install
+npm install
 
 # Run development server
-pnpm dev
-```
+npm run dev
 
-Visit [http://localhost:3000](http://localhost:3000)
+# Open http://localhost:3000
+```
 
 ## 📁 Project Structure
 
 ```
-islam-for-life-stages/
+faith-life-stages/
+├── config/
+│   └── religion.ts       ← CHANGE THIS FILE FOR NEW RELIGIONS
+│
 ├── app/
-│   ├── actions.ts          # AI content generation (Islamic prompts)
-│   ├── page.tsx            # Landing page
-│   ├── daily/              # Daily ayah page
-│   ├── prayer-times/       # Prayer times feature
-│   ├── qibla/              # Qibla compass
-│   └── example/[verse]/    # Example content preview
-├── components/
-│   ├── ui/                 # shadcn/ui components
-│   ├── PrayerCard.tsx      # Prayer time display
-│   └── QiblaCompass.tsx    # Compass UI
+│   ├── layout.tsx        ← Reads from config
+│   ├── page.tsx          ← Landing page
+│   ├── globals.css
+│   └── example/[id]/
+│       └── page.tsx      ← Scripture preview
+│
 ├── lib/
-│   ├── data/
-│   │   ├── life-stages.ts  # 12 Islamic life stages
-│   │   └── example-ayahs.ts # Demo verses (Ayat al-Kursi, etc.)
-│   ├── types.ts            # TypeScript types
-│   ├── quran.ts            # Quran.com API wrapper
-│   ├── aladhan.ts          # Prayer times API
-│   ├── cache.ts            # Supabase caching
-│   └── supabase/           # Database clients
-└── public/
-    └── images/             # Branding assets
+│   ├── types.ts          ← Generic types for any religion
+│   ├── scripture-api.ts  ← Multi-provider scripture fetcher
+│   ├── ai-prompts.ts     ← Config-driven AI prompts
+│   └── utils.ts
+│
+└── ARCHITECTURE.md       ← Full documentation
 ```
 
-## 🎯 Key Features
+## 🔧 How to Create a New Religion Version
 
-### Free Tier
-- Daily Ayah with Arabic + translation
-- Prayer times with notifications
-- Qibla compass
-- "Let's Talk" AI chat (unlimited)
-- Friendly Breakdown (teaser)
+### 1. Copy the config
 
-### Premium Tier ($4.99/mo or $29.99/yr)
-- Full Friendly Breakdown
-- Dive Deeper: Context, Stories, Hadith, Poetry
-- Ad-free experience
+```bash
+cp config/religion.ts config/religion-backup.ts
+```
 
-## 🌍 APIs Used
+### 2. Edit config/religion.ts with new values:
 
-### Quran.com API (Free)
-- Verses: `/verses/by_key/{surah}:{ayah}`
-- Translations: 100+ languages
-- Search: Full-text search
-- [Documentation](https://quran.api-docs.io/)
+```typescript
+export const RELIGION = {
+  id: "hinduism",
+  name: "Hindu for Life Stages",
+  shortName: "Hindu",
+  tagline: "Daily wisdom from the Vedas personalized for your ashrama",
+  
+  terms: {
+    scripture: "Vedas & Gita",
+    verse: "Shloka",
+    chapter: "Adhyaya",
+    god: "Bhagwan",
+    prayer: "Prarthana",
+    greeting: "Namaste",
+    closingBlessing: "Om Shanti",
+    holyBook: "Bhagavad Gita",
+    follower: "Hindu",
+    followerPlural: "Hindus",
+  },
+  
+  theme: {
+    primary: "orange",
+    secondary: "amber",
+    // ... colors
+  },
+  
+  lifeStages: [
+    { id: "brahmacharya", label: "Student (Brahmacharya)", ... },
+    { id: "grihastha", label: "Householder (Grihastha)", ... },
+    // ...
+  ],
+  
+  // ... rest of config
+}
+```
 
-### Aladhan API (Free)
-- Prayer Times: `/timings/{timestamp}`
-- Qibla Direction: `/qibla/{lat}/{lng}`
-- Hijri Calendar: `/gToH/{date}`
-- [Documentation](https://aladhan.com/prayer-times-api)
+### 3. Deploy
 
-## 🤲 Charity
+That's it! The entire app reads from the config.
 
-10% of all profits go to Islamic Relief USA.
+## 🌍 Supported Religions (Planned)
 
-## 📜 License
+| Religion | Config Status | API Status |
+|----------|---------------|------------|
+| Islam | ✅ Complete | ✅ Quran.com |
+| Christianity | 📝 Template ready | 🔜 Bible API |
+| Judaism | 📝 Template ready | 🔜 Sefaria |
+| Hinduism | 📝 Template ready | 🔜 Vedabase |
+| Buddhism | 📝 Template ready | 🔜 Access to Insight |
+| Sikhism | 📝 Template ready | 🔜 SikhiToTheMax |
 
-MIT License - see [LICENSE](LICENSE)
+## 📦 Key Files Explained
 
-## 🙏 Acknowledgments
+### `config/religion.ts`
+The **only file you change** per religion. Contains:
+- Identity (name, tagline)
+- Terminology (verse, chapter, god, prayer, etc.)
+- Theme colors
+- Life stages specific to the religion
+- API configuration
+- AI prompt context
+- Optional features (prayer times, direction finder, etc.)
 
-- Quran.com for the free Quran API
-- Aladhan.com for prayer times
-- The global Muslim community for feedback and inspiration
+### `lib/scripture-api.ts`
+Abstraction layer that:
+- Reads API config from religion.ts
+- Routes requests to correct provider (Quran.com, Bible API, etc.)
+- Returns standardized `Scripture` objects
+
+### `lib/ai-prompts.ts`
+Generates AI prompts dynamically:
+- Uses terminology from config
+- Adapts to life stage
+- Includes religion-specific context
+- No hardcoded religion references
+
+### `lib/types.ts`
+Generic TypeScript types:
+- `Scripture` - works for any verse/ayah/shloka
+- `LifeStage` - universal life stage definition
+- `GeneratedContent` - AI output structure
+
+## 🎨 Theming
+
+Colors are defined in config and applied via CSS variables:
+
+```typescript
+// config/religion.ts
+theme: {
+  colors: {
+    primary: "#10b981",    // Emerald for Islam
+    primaryDark: "#059669",
+    secondary: "#14b8a6",
+    accent: "#f59e0b",
+  }
+}
+```
+
+These become CSS variables in `layout.tsx`:
+```css
+--color-primary: #10b981;
+```
+
+Used throughout the app:
+```tsx
+style={{ backgroundColor: theme.colors.primary }}
+```
+
+## 🔜 To Add
+
+1. **Daily Page** (`/daily`) - Shows today's scripture
+2. **Auth Pages** (`/auth/login`, `/auth/signup`)
+3. **Prayer Times** (conditional feature)
+4. **Direction Finder** (Qibla for Islam, Jerusalem for Judaism)
+5. **AI Generation API** - Full content generation
+
+## 📄 License
+
+MIT
 
 ---
 
-**Bismillah** - In the name of Allah, the Most Gracious, the Most Merciful.
-
-*Helping Muslims better understand what the Quran means in their season of life.*
+Built with ❤️ for spiritual seekers everywhere.
